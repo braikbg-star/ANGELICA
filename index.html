@@ -1,0 +1,850 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#461445">
+  <title>Una sorpresa para Angélica</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      font-family: Arial, sans-serif;
+      color: #4c294d;
+      color-scheme: light;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      min-height: 100svh;
+      padding: 80px 18px 35px;
+      display: grid;
+      place-items: center;
+      overflow-x: hidden;
+      background: linear-gradient(
+        130deg,
+        #24133e,
+        #6e205e,
+        #bd427e,
+        #53338b
+      );
+      background-size: 350% 350%;
+      animation: fondo 18s ease infinite;
+    }
+
+    @keyframes fondo {
+      0%, 100% {
+        background-position: 0% 50%;
+      }
+      50% {
+        background-position: 100% 50%;
+      }
+    }
+
+    #decoracion,
+    #confeti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+
+    #decoracion {
+      z-index: 0;
+    }
+
+    #confeti {
+      z-index: 10;
+    }
+
+    .corazon {
+      position: absolute;
+      bottom: -70px;
+      left: var(--x);
+      font-size: var(--tamano);
+      opacity: 0;
+      animation: flotar var(--duracion) linear infinite;
+      animation-delay: var(--demora);
+    }
+
+    @keyframes flotar {
+      10%, 80% {
+        opacity: 0.45;
+      }
+      100% {
+        transform: translateY(-125vh) rotate(35deg);
+        opacity: 0;
+      }
+    }
+
+    main {
+      position: relative;
+      z-index: 1;
+      width: min(100%, 470px);
+    }
+
+    .tarjeta {
+      padding: 28px 24px;
+      border-radius: 30px;
+      text-align: center;
+      background: rgba(255, 250, 253, 0.97);
+      border: 2px solid rgba(255, 255, 255, 0.6);
+      box-shadow:
+        0 25px 70px rgba(0, 0, 0, 0.3),
+        0 0 45px rgba(255, 120, 200, 0.2);
+    }
+
+    .pasos {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 23px;
+    }
+
+    .punto {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #e3d4e4;
+    }
+
+    .punto.actual {
+      background: #e54792;
+      transform: scale(1.3);
+    }
+
+    .pantalla[hidden] {
+      display: none;
+    }
+
+    .pantalla:not([hidden]) {
+      animation: aparecer 0.45s ease both;
+    }
+
+    @keyframes aparecer {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .etiqueta {
+      display: inline-block;
+      padding: 7px 13px;
+      margin-bottom: 18px;
+      background: #f4e3f2;
+      color: #a53d81;
+      border-radius: 25px;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .foto {
+      display: block;
+      width: 100%;
+      max-width: 310px;
+      max-height: 310px;
+      object-fit: contain;
+      margin: 0 auto 22px;
+      border-radius: 20px;
+      background: #f6eaf2;
+      box-shadow: 0 8px 25px #62234a20;
+    }
+
+    h1, h2 {
+      margin: 0 0 15px;
+      font-size: clamp(26px, 6vw, 34px);
+      line-height: 1.2;
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.5;
+      color: #795c78;
+    }
+
+    .pequeno {
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    button {
+      font: inherit;
+      font-weight: bold;
+      min-height: 50px;
+      padding: 14px 22px;
+      border: 0;
+      border-radius: 17px;
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    button:focus-visible,
+    input:focus-visible {
+      outline: 3px solid #f4b83e;
+      outline-offset: 4px;
+    }
+
+    .principal {
+      color: white;
+      background: linear-gradient(120deg, #ed4b8d, #a354db);
+      box-shadow: 0 8px 20px #bd378b35;
+      transition: transform 0.2s;
+    }
+
+    .principal:hover {
+      transform: translateY(-2px);
+    }
+
+    .ancho {
+      width: 100%;
+      margin-top: 15px;
+    }
+
+    button:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    #zonaBotones {
+      position: relative;
+      height: 170px;
+      margin-top: 22px;
+      background: #f6eaf3;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    #botonSi,
+    #botonNo {
+      position: absolute;
+      top: 55px;
+      min-width: 100px;
+    }
+
+    #botonSi {
+      left: 9%;
+    }
+
+    #botonNo {
+      right: 9%;
+      background: #e6dbe5;
+      color: #775c75;
+    }
+
+    label {
+      display: block;
+      margin: 20px 0 9px;
+      text-align: left;
+      font-weight: bold;
+    }
+
+    input {
+      display: block;
+      width: 100%;
+      min-width: 0;
+      min-height: 52px;
+      padding: 13px;
+      border: 2px solid #e3c6df;
+      border-radius: 14px;
+      background: white;
+      font: inherit;
+      color: #54334f;
+    }
+
+    #estado {
+      min-height: 22px;
+      font-size: 14px;
+    }
+
+    .error {
+      color: #b02a4b;
+    }
+
+    #controlMusica {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      z-index: 5;
+      min-height: 42px;
+      padding: 10px 15px;
+      background: #fff5fc;
+      color: #85437a;
+      border-radius: 30px;
+      font-size: 13px;
+      box-shadow: 0 5px 20px #0002;
+    }
+
+    .firma {
+      margin-top: 20px;
+      text-align: center;
+      color: #ffffffb8;
+      font-size: 12px;
+    }
+
+    .resumen {
+      padding: 16px;
+      margin-top: 20px;
+      border-radius: 17px;
+      background: #f5e4f2;
+    }
+
+    .resumen p {
+      margin: 6px 0;
+      font-size: 16px;
+    }
+
+    .papel {
+      position: absolute;
+      top: -25px;
+      left: var(--x);
+      width: 9px;
+      height: 15px;
+      background: var(--color);
+      animation: caer var(--tiempo) ease-in forwards;
+      animation-delay: var(--demora);
+    }
+
+    @keyframes caer {
+      to {
+        transform: translate(var(--desvio), 110vh) rotate(750deg);
+      }
+    }
+
+    @media (max-width: 360px) {
+      .tarjeta {
+        padding: 24px 16px;
+      }
+
+      #botonSi {
+        left: 4%;
+      }
+
+      #botonNo {
+        right: 4%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+
+      .corazon {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div id="decoracion" aria-hidden="true"></div>
+  <div id="confeti" aria-hidden="true"></div>
+
+  <audio id="musica" loop preload="auto">
+    <source src="cancion.mp3" type="audio/mpeg">
+  </audio>
+
+  <button id="controlMusica" type="button" hidden>
+    🎵 Activar música
+  </button>
+
+  <main>
+    <div class="tarjeta">
+      <div class="pasos" aria-hidden="true">
+        <span class="punto actual"></span>
+        <span class="punto"></span>
+        <span class="punto"></span>
+        <span class="punto"></span>
+      </div>
+
+      <!-- PRIMERA PANTALLA -->
+      <section id="pantalla1" class="pantalla">
+        <span class="etiqueta">Un mensaje para ti</span>
+
+        <img
+          class="foto"
+          src="chayanne-hola.jpg"
+          alt="Chayanne saludando"
+        >
+
+        <h1 tabindex="-1">Hola, Angélica 👋</h1>
+        <p>¿Me perdonas? 🥺</p>
+        <p>Te tengo una propuesta…</p>
+
+        <button id="comenzar" class="principal ancho" type="button">
+          Siguiente →
+        </button>
+
+        <p class="pequeno">
+          Mejor con el volumen encendido 🎶
+        </p>
+      </section>
+
+      <!-- SEGUNDA PANTALLA -->
+      <section id="pantalla2" class="pantalla" hidden>
+        <span class="etiqueta">La propuesta</span>
+
+        <img
+          class="foto"
+          src="chayanne-brian.jpg"
+          alt="Chayanne con una invitación especial"
+        >
+
+        <h2 tabindex="-1">Te invito a salir 💌</h2>
+        <p>¿Aceptas?</p>
+
+        <div id="zonaBotones">
+          <button id="botonSi" class="principal" type="button">
+            Sí 💖
+          </button>
+
+          <button id="botonNo" type="button">
+            No 🙃
+          </button>
+        </div>
+
+        <p id="broma" class="pequeno" aria-live="polite">
+          Uno de estos botones es un poquito tímido…
+        </p>
+      </section>
+
+      <!-- TERCERA PANTALLA -->
+      <section id="pantalla3" class="pantalla" hidden>
+        <span class="etiqueta">Pongámosle fecha</span>
+
+        <img
+          class="foto"
+          src="chayanne-perdon.jpg"
+          alt="Chayanne esperando que escojas la fecha"
+        >
+
+        <h2 tabindex="-1">¡Genial! 🎉</h2>
+
+        <p>
+          Escoge la fecha y la hora que mejor te queden.
+        </p>
+
+        <p class="pequeno">
+          Yo pongo la invitación; tú eliges cuándo. 😉
+        </p>
+
+        <form id="formulario">
+          <label for="fecha">Fecha de la cita</label>
+          <input
+            id="fecha"
+            name="fecha"
+            type="date"
+            required
+          >
+
+          <label for="hora">Hora de la cita</label>
+          <input
+            id="hora"
+            name="hora"
+            type="time"
+            required
+          >
+
+          <p class="pequeno">
+            Al confirmar, le enviarás a Brian tu respuesta,
+            la fecha y la hora elegidas.
+          </p>
+
+          <button
+            id="confirmar"
+            class="principal ancho"
+            type="submit"
+          >
+            Confirmar fecha y hora 💌
+          </button>
+
+          <p id="estado" role="status" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <!-- PANTALLA FINAL -->
+      <section id="pantalla4" class="pantalla" hidden>
+        <span class="etiqueta">Tenemos una cita</span>
+
+        <img
+          class="foto"
+          src="chayanne-final.jpg"
+          alt="Chayanne celebrando"
+        >
+
+        <h2 tabindex="-1">Gracias por tu atención ❤️</h2>
+        <p>¡Qué obediente! 😂</p>
+        <p>Ahora sí, tenemos una cita.</p>
+
+        <div class="resumen">
+          <p id="fechaFinal"></p>
+          <p id="horaFinal"></p>
+        </div>
+
+        <p class="pequeno">
+          Tu respuesta, la fecha y la hora ya se enviaron. 💌
+        </p>
+      </section>
+    </div>
+
+    <div class="firma">
+      Con Chayanne de testigo 🎶
+    </div>
+  </main>
+
+  <script>
+    const ENDPOINT = "https://formspree.io/f/xnppdzzn";
+
+    const musica = document.getElementById("musica");
+    const controlMusica = document.getElementById("controlMusica");
+    const botonSi = document.getElementById("botonSi");
+    const botonNo = document.getElementById("botonNo");
+    const zonaBotones = document.getElementById("zonaBotones");
+    const fecha = document.getElementById("fecha");
+    const hora = document.getElementById("hora");
+    const confirmar = document.getElementById("confirmar");
+    const estado = document.getElementById("estado");
+
+    let aceptado = false;
+    let enviando = false;
+    let terminado = false;
+    let envioAceptacion = Promise.resolve();
+
+    musica.volume = 0.35;
+
+    function mostrarPantalla(numero) {
+      document.querySelectorAll(".pantalla").forEach((pantalla) => {
+        pantalla.hidden = pantalla.id !== "pantalla" + numero;
+      });
+
+      document.querySelectorAll(".punto").forEach((punto, indice) => {
+        punto.classList.toggle("actual", indice === numero - 1);
+      });
+
+      const titulo = document.querySelector(
+        "#pantalla" + numero + " h1, #pantalla" + numero + " h2"
+      );
+
+      if (titulo) {
+        titulo.focus({ preventScroll: true });
+      }
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    async function reproducirMusica() {
+      try {
+        await musica.play();
+        controlMusica.textContent = "🔇 Pausar música";
+      } catch {
+        controlMusica.textContent = "🎵 Activar música";
+      }
+    }
+
+    document.getElementById("comenzar").addEventListener("click", () => {
+      controlMusica.hidden = false;
+      reproducirMusica();
+      mostrarPantalla(2);
+    });
+
+    controlMusica.addEventListener("click", () => {
+      if (musica.paused) {
+        reproducirMusica();
+      } else {
+        musica.pause();
+        controlMusica.textContent = "🎵 Activar música";
+      }
+    });
+
+    musica.addEventListener("error", () => {
+      controlMusica.textContent = "⚠️ Audio no disponible";
+    });
+
+    // Corazones y estrellas flotantes.
+    const simbolos = ["💖", "✨", "💕", "🎵", "💜", "⭐"];
+    const decoracion = document.getElementById("decoracion");
+
+    for (let i = 0; i < 18; i++) {
+      const elemento = document.createElement("span");
+      elemento.className = "corazon";
+      elemento.textContent = simbolos[i % simbolos.length];
+
+      elemento.style.setProperty("--x", Math.random() * 100 + "%");
+      elemento.style.setProperty("--tamano", 18 + Math.random() * 20 + "px");
+      elemento.style.setProperty("--duracion", 14 + Math.random() * 14 + "s");
+      elemento.style.setProperty("--demora", -Math.random() * 28 + "s");
+
+      decoracion.appendChild(elemento);
+    }
+
+    function lanzarConfeti() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+      }
+
+      const colores = [
+        "#ff5c99",
+        "#ffd45c",
+        "#bf86ff",
+        "#ffffff",
+        "#78dfd0"
+      ];
+
+      const contenedor = document.getElementById("confeti");
+
+      for (let i = 0; i < 65; i++) {
+        const papel = document.createElement("i");
+        papel.className = "papel";
+
+        papel.style.setProperty("--x", Math.random() * 100 + "%");
+        papel.style.setProperty("--color", colores[i % colores.length]);
+        papel.style.setProperty("--tiempo", 2.5 + Math.random() * 2 + "s");
+        papel.style.setProperty("--demora", Math.random() * 0.5 + "s");
+        papel.style.setProperty("--desvio", Math.random() * 180 - 90 + "px");
+
+        contenedor.appendChild(papel);
+        papel.addEventListener("animationend", () => papel.remove());
+      }
+    }
+
+    // El botón "No" se mueve sin tapar el botón "Sí".
+    function moverNo() {
+      const maxX = zonaBotones.clientWidth - botonNo.offsetWidth - 8;
+      const maxY = zonaBotones.clientHeight - botonNo.offsetHeight - 8;
+
+      const siX = botonSi.offsetLeft;
+      const siY = botonSi.offsetTop;
+      const siW = botonSi.offsetWidth;
+      const siH = botonSi.offsetHeight;
+
+      const anteriorX = botonNo.offsetLeft;
+      const anteriorY = botonNo.offsetTop;
+
+      let posicion = null;
+
+      for (let intento = 0; intento < 80; intento++) {
+        const x = 8 + Math.random() * Math.max(0, maxX - 8);
+        const y = 8 + Math.random() * Math.max(0, maxY - 8);
+
+        const tapaSi =
+          x < siX + siW + 8 &&
+          x + botonNo.offsetWidth > siX - 8 &&
+          y < siY + siH + 8 &&
+          y + botonNo.offsetHeight > siY - 8;
+
+        const distancia = Math.hypot(
+          x - anteriorX,
+          y - anteriorY
+        );
+
+        if (!tapaSi && distancia > 45) {
+          posicion = { x, y };
+          break;
+        }
+      }
+
+      if (!posicion) {
+        posicion = {
+          x: Math.max(8, maxX),
+          y: anteriorY > 35 ? 8 : Math.max(8, maxY)
+        };
+      }
+
+      botonNo.style.right = "auto";
+      botonNo.style.left = posicion.x + "px";
+      botonNo.style.top = posicion.y + "px";
+
+      document.getElementById("broma").textContent =
+        "¡Ese botón salió corriendo! 😂";
+    }
+
+    botonNo.addEventListener("pointerenter", (evento) => {
+      if (evento.pointerType === "mouse") {
+        moverNo();
+      }
+    });
+
+    botonNo.addEventListener("pointerdown", (evento) => {
+      evento.preventDefault();
+      moverNo();
+    });
+
+    botonNo.addEventListener("click", (evento) => {
+      evento.preventDefault();
+      moverNo();
+    });
+
+    function fechaLocalHoy() {
+      const hoy = new Date();
+      const anio = hoy.getFullYear();
+      const mes = String(hoy.getMonth() + 1).padStart(2, "0");
+      const dia = String(hoy.getDate()).padStart(2, "0");
+
+      return `${anio}-${mes}-${dia}`;
+    }
+
+    fecha.min = fechaLocalHoy();
+
+    fecha.addEventListener("input", () => {
+      fecha.setCustomValidity("");
+    });
+
+    hora.addEventListener("input", () => {
+      hora.setCustomValidity("");
+    });
+
+    async function enviarDatos(campos) {
+      const datos = new FormData();
+
+      Object.entries(campos).forEach(([nombre, valor]) => {
+        datos.append(nombre, valor);
+      });
+
+      const controlador = new AbortController();
+      const limite = setTimeout(() => controlador.abort(), 15000);
+
+      try {
+        const respuesta = await fetch(ENDPOINT, {
+          method: "POST",
+          body: datos,
+          headers: {
+            Accept: "application/json"
+          },
+          signal: controlador.signal
+        });
+
+        if (!respuesta.ok) {
+          throw new Error("No se confirmó el envío.");
+        }
+      } finally {
+        clearTimeout(limite);
+      }
+    }
+
+    botonSi.addEventListener("click", () => {
+      if (aceptado) return;
+
+      aceptado = true;
+      botonSi.disabled = true;
+
+      envioAceptacion = enviarDatos({
+        nombre: "Angélica",
+        evento: "Aceptó la invitación",
+        respuesta: "Sí, acepto salir con Brian",
+        _subject: "Angélica aceptó la invitación"
+      }).catch(() => {
+        // El envío final también incluye la aceptación.
+      });
+
+      mostrarPantalla(3);
+      lanzarConfeti();
+    });
+
+    document.getElementById("formulario").addEventListener(
+      "submit",
+      async (evento) => {
+        evento.preventDefault();
+
+        if (enviando || terminado) return;
+
+        fecha.min = fechaLocalHoy();
+        fecha.setCustomValidity("");
+        hora.setCustomValidity("");
+
+        if (!evento.target.reportValidity()) return;
+
+        const fechaElegida = fecha.value;
+        const horaElegida = hora.value;
+
+        const [anio, mes, dia] = fechaElegida.split("-").map(Number);
+        const [horas, minutos] = horaElegida.split(":").map(Number);
+
+        const momentoCita = new Date(
+          anio,
+          mes - 1,
+          dia,
+          horas,
+          minutos
+        );
+
+        if (momentoCita <= new Date()) {
+          hora.setCustomValidity(
+            "Escoge una fecha y una hora que todavía no hayan pasado."
+          );
+          hora.reportValidity();
+          return;
+        }
+
+        const fechaBonita = new Intl.DateTimeFormat("es-CO", {
+          weekday: "long",
+          day: "numeric",
+          month: "long",
+          year: "numeric"
+        }).format(momentoCita);
+
+        const horaBonita = new Intl.DateTimeFormat("es-CO", {
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true
+        }).format(momentoCita);
+
+        enviando = true;
+        confirmar.disabled = true;
+        confirmar.textContent = "Enviando… 💌";
+        estado.classList.remove("error");
+        estado.textContent = "Estamos enviando tu fecha y tu hora.";
+
+        try {
+          await envioAceptacion;
+
+          await enviarDatos({
+            nombre: "Angélica",
+            evento: "Confirmó fecha y hora",
+            respuesta: "Sí, acepto salir con Brian",
+            fecha: fechaElegida,
+            hora: horaElegida,
+            fecha_texto: fechaBonita,
+            hora_texto: horaBonita,
+            zona_horaria:
+              Intl.DateTimeFormat().resolvedOptions().timeZone,
+            _subject: "Angélica confirmó la fecha y la hora de la cita"
+          });
+
+          terminado = true;
+
+          document.getElementById("fechaFinal").textContent =
+            "📅 " + fechaBonita;
+
+          document.getElementById("horaFinal").textContent =
+            "🕒 " + horaBonita;
+
+          mostrarPantalla(4);
+          lanzarConfeti();
+        } catch {
+          estado.classList.add("error");
+          estado.textContent =
+            "No pudimos confirmar el envío. Revisa tu conexión y vuelve a intentarlo.";
+        } finally {
+          enviando = false;
+          confirmar.disabled = terminado;
+          confirmar.textContent = terminado
+            ? "Enviado"
+            : "Confirmar fecha y hora 💌";
+        }
+      }
+    );
+  </script>
+</body>
+</html>
